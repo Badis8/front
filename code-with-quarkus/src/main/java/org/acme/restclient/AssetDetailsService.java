@@ -3,7 +3,9 @@ package org.acme.restclient;
 import org.acme.restclient.DTO.AssetDetails;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
@@ -24,4 +26,10 @@ public interface AssetDetailsService {
     @PUT
     @Path("/assets")
     AssetDetails updateAsset(AssetDetails a);  
+    @POST
+    @Path("/assets")
+    AssetDetails addAsset(AssetDetails a); 
+    @DELETE
+    @Path("/assets/{id}")
+    AssetDetails deleteAsset(@PathParam("id") Long id); 
 }

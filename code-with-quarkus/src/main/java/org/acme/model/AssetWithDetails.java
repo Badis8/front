@@ -35,7 +35,8 @@ public class AssetWithDetails {
      public static List<AssetWithDetails> combineLists(List<Asset> assets, List<AssetDetails> details) {
         List<AssetWithDetails> combinedList = new ArrayList<>();
         
-        for (Asset asset : assets) {
+        for (Asset asset : assets) { 
+            if(asset.latitude != -200){
             for (AssetDetails detail : details) {
                 if (asset.assetID == detail.assetId) {
                     combinedList.add(new AssetWithDetails(asset, detail));
@@ -43,7 +44,9 @@ public class AssetWithDetails {
                 }
             }
         }
-        
+        }
+
+      
         return combinedList;
     }
 }

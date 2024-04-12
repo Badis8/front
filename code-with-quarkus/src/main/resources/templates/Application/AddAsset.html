@@ -12,25 +12,44 @@
 
  
  
- <div class="container">
-  <form action="action_page.php">
+<body>  
+<div class="topnav">
+  <a class="active" href="/">Home</a>
+  <a href="/Fences">Fences</a>
+  <a href="/AssetList">Assets</a>
+  <a href="/Rules">Rules</a>
+  <a href="/">liveTracking</a>
+</div>
+<div class="bodyTemplate"> 
+    <div class="form-container">
+    <h2>Add Asset</h2>
+    <form action="/AddAsset" method="post">
+      <input type="hidden" name="{inject:csrf.parameterName}" value="{inject:csrf.token}"/>
+           <label for="tag">Asset tag</label>
+            <input type="text" id="tag" name="tag" required>
 
-    <label for="tag">Asset tag</label>
-    <input type="text" id="tag" name="tag" placeholder="Tag">
 
-    <label for="manager">Asset manager</label>
-    <input type="text" id="manager" name="manager" placeholder="Manager">
+            <label for="status">Status:</label>
+            <select id="status" name="status" required>
+                <option value="ACTIVE">Active</option>
+                <option value="INACTIVE">Inactive</option>
+            </select>
 
-    <label for="Type">Type</label>
-    <input type="text" id="Type" name="Type" placeholder="Type">
+            <label for="tenantOwner">Tenant manager:</label>
+            <input type="text" id="tenantOwner" name="tenantOwner" required>
 
+            <label for="type">Type:</label>
+            <input type="text" id="type" name="type" required>
 
-
-        
-    <label for="Description">Description</label>
-    <textarea id="Description" name="Description" placeholder="Description style="height:200px"></textarea>
-
-    <input type="submit" value="Submit">
-
-  </form>
-</div> 
+      <label for=">description">Description</label>
+          <textarea id="description" name="description">
+</textarea> 
+<br/>
+            <button type="submit">Submit</button>
+           </form>
+    </div>
+    </div>
+</body>
+    
+ 
+</html>

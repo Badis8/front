@@ -57,6 +57,16 @@ public class Application extends Controller {
         public static native TemplateInstance AssetDetail(AssetPresentationWithinRules d,String assetJSON);
 
         public static native TemplateInstance AddAsset();
+
+        public static native TemplateInstance FenceDetail(Fence d); 
+
+
+        public static native TemplateInstance FenceList(List<Fence> Fences);
+
+
+        public static native TemplateInstance addFence();
+
+        
     }
 
     @Blocking
@@ -125,6 +135,7 @@ public class Application extends Controller {
         AssetDetails ad=new AssetDetails(id,tenantOwner,type,tag,description,status);
         this.assetDetailService.updateAsset(ad);
         AssetDetail(id) ;
+    
             
         
     } 
@@ -135,4 +146,73 @@ public class Application extends Controller {
     public TemplateInstance AddAsset() throws Exception {
         return Templates.AddAsset();
     }  
+
+
+    @POST
+    @Path("/AddAsset")
+    public void  AddAsset(@FormParam("status") String status,@FormParam("tenantOwner") String tenantOwner,@FormParam("description") String description,@FormParam("tag") String tag,@FormParam("type") String type) throws Exception          {
+        AssetDetails ad=new AssetDetails(0,tenantOwner,type,tag,description,status);
+        
+        this.assetDetailService.addAsset(ad);
+        
+        AssetList();
+            
+        
+    } 
+
+    
+    @Path("/DeleteAsset/{id}")
+    public void  deleteAsset(@PathParam("id") Long id) throws Exception          {
+        this.assetDetailService.deleteAsset(id);
+        AssetList();   
+    }  
+
+    @Blocking
+    @Path("/fenceDetail/{id}")
+    public TemplateInstance  fenceDetail(@PathParam("id") Long id) throws Exception          {
+        Fence fenceDetail=this.FencesService.findFenceById(id);
+
+        return Templates.FenceDetail(fenceDetail);
+        
+    } 
+    @Blocking
+    @POST
+    @Path("/fences/{id}")
+    public void  updateFence(@PathParam("id") Long id,@FormParam("longitude") String longitude,@FormParam("radius") String radius,@FormParam("description") String description,@FormParam("tag") String tag,@FormParam("latitude") String latitude) throws Exception          {
+        Fence toUpdate=new Fence(id,Double.parseDouble(latitude),Double.parseDouble(longitude),Double.parseDouble(radius),tag,description);
+        this.FencesService.updateFence(toUpdate);
+        fenceDetail(id);
+        
+    }  
+
+
+
+    @Blocking
+    @Path("/Fences")
+    public TemplateInstance fenceList() throws Exception {
+        List<Fence> fenceList = this.FencesService.findAllFences();   
+
+        return Templates.FenceList(fenceList);
+    }  
+    @Path("/DeleteFence/{id}")
+    public void  deleteFence(@PathParam("id") long id) throws Exception          {
+        this.FencesService.deleteFence(id);
+        fenceList();   
+    }  
+
+    @Path("/AddFence")
+    public TemplateInstance  addFence( ) throws Exception          {
+        return Templates.addFence(); 
+       }  
+
+       @Blocking
+       @POST
+       @Path("/Addfences")
+       public void  addFence(@FormParam("longitude") String longitude,@FormParam("radius") String radius,@FormParam("description") String description,@FormParam("tag") String tag,@FormParam("latitude") String latitude) throws Exception          {
+           Fence toAdd=new Fence(0,Double.parseDouble(latitude),Double.parseDouble(longitude),Double.parseDouble(radius),tag,description);
+           this.FencesService.saveFence(toAdd); 
+           fenceList();
+           
+       }  
+    
 }

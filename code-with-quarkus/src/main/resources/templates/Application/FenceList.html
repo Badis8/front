@@ -31,20 +31,20 @@
     <div class="cards">  
   <div class="card" style="width: 18rem;">
   <div class="card-body">
-    <h5 class="card-title">Add asset</h5>
-    <p class="card-text">Configure your own asset to track and monitor</p>
-    <a href="/AddAsset" class="btn btn-primary">add</a>
+    <h5 class="card-title">Add fence</h5>
+    <p class="card-text">Configure your own fence to track and monitor</p>
+    <a href="/AddFence" class="btn btn-primary">add</a>
   </div>
 </div>   
  
         
-         {#for asset in AssetDetails} 
+         {#for fence in Fences} 
  
   <div class="card" style="width: 18rem;">
   <div class="card-body">
-    <h5 class="card-title">{asset.type}</h5>
-    <p class="card-text">{asset.description}</p>
-    <a href="/AssetDetail/{asset.assetId}" class="btn btn-primary">Details</a>
+    <h5 class="card-title">{fence.tag}</h5>
+    <p class="card-text">{fence.description}</p>
+    <a href="/fenceDetail/{fence.fenceId}" class="btn btn-primary">Details</a>
   </div>
 </div>   
  

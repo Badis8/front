@@ -85,28 +85,42 @@
     text-align: center;
     margin-bottom: 30px;
     margin-top: 30px;
+} 
+.topnav {
+  background-color: #333;
+  overflow: hidden;
+}
+ 
+.topnav a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+ 
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+ 
+.topnav a.active {
+  background-color: #04AA6D;
+  color: white;
 }
     </style>
 
  <body>
- <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">logo</a>
+ <div class="topnav">
+  <a class="active" href="/">Home</a>
+  <a href="/Fences">Fences</a>
+  <a href="/AssetList">Assets</a>
+  <a href="/Rules">Rules</a>
+  <a href="/">liveTracking</a>
+</div>
  
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Fences</a>
-        </li>
-             <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Assets</a>
-        </li>
-        </ul>
- 
-    
-    </div>
-  </div>
-</nav>
    
 
     <div id="container">
@@ -250,7 +264,9 @@
       markers.clearLayers();
         coordinates.forEach(function (coord) {
             var marker = L.marker(coord.center);
-            marker.bindPopup("<b>Asset ID:</b>"+coord.assetID+"<br><b>Status:</b>"+coord.status);
+          marker.bindPopup(
+    "<a class='link' href='/AssetDetail/" + coord.assetID + "'>Details</a>"
+  );
             markers.addLayer(marker);
 
         });
@@ -262,15 +278,19 @@
             radius: coord.radius          
             }) 
               markers.addLayer(circle);
-            circle.bindPopup("blablabla");
+            circle.bindPopup(
+    "<a class='link' href='/fenceDetail/" + coord.fencesID + "'>Details</a>"
+  );
 
 
         });
 
        map.addLayer(markers);
+        if(coordinates.length != 0){
         var bounds = L.latLngBounds(coordinates.map(coord => coord.center));
         
         map.fitBounds(bounds);
+        }
       
 }
     function addMarkers(coordinates,fencesCoor) {
@@ -286,11 +306,15 @@
          console.log(coord)
           if(coord.movement == "STOPED"){
             var marker = L.marker(coord.center,{ icon: myIcon });    
-            marker.bindPopup("<b>Asset ID:</b>"+coord.assetID+"<br><b>Status:</b>"+coord.status);
+         marker.bindPopup(
+    "<a class='link' href='/AssetDetail/" + coord.assetID + "'>Details</a>"
+  );
             }
             else{
             var marker = L.marker(coord.center);    
-            marker.bindPopup("<b>Asset ID:</b>"+coord.assetID+"<br><b>Status:</b>"+coord.status);
+            marker.bindPopup(
+    "<a class='link' href='/AssetDetail/" + coord.assetID + "'>Details</a>"
+  );
             }
             markers.addLayer(marker);
 
@@ -305,31 +329,34 @@
             fillOpacity: 0.5,     
             radius: coord.radius          
             }) ;
-            circle.bindPopup("blablabla");
+            circle.bindPopup(
+    "<a class='link' href='/fenceDetail/" + coord.fencesID + "'>Details</a>"
+  );
             markers.addLayer(circle);
 
 
         });
-
-
+          map.addLayer(markers); 
+        if(coordinates.length !=0){
         var bounds = L.latLngBounds(coordinates.map(coord => coord.center)); 
-        var corner2 = L.latLng(40.774, -74.125);
-        map.addLayer(markers);        
+       
+              
         map.fitBounds(bounds);
+        }
     }
 
     var assetJSON = {assetJSON.raw}
     console.log(assetJSON)
      const transformedArray = assetJSON.map(obj => ({
-         assetID: obj.assetID,
+         assetID: obj.assetId,
         center: [obj.latitude, obj.longitude],
             status: obj.status,
             movement:obj.movementStatus
         }));
-
+ 
        var fenceJSON = {fenceJSON.raw}
      const transformedArrayFences = fenceJSON.map(obj => ({
-         fencesID: obj.assetID,
+         fencesID: obj.fenceId,
         center: [obj.latitude, obj.longitude],
             radius: obj.radius
         }));
