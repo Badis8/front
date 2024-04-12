@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" /> 
+      <link rel="stylesheet" href="static/AssetList.css">
+     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.1/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.1/MarkerCluster.Default.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.1/leaflet.markercluster.js"></script>
+   
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>Ma page de test</title> 
+
+
+    
+  <style> 
+
+            
+        #container {
+            display: flex;
+            height: 100vh;
+        }
+
+        #map-container {
+            flex: 1;
+             flex: 0 0 65%;
+             transition: flex 0.5s ease; 
+        }
+        
+
+           #assets-container {
+           
+            flex: 0 0 35%;  
+            overflow-y: auto;
+             position: relative;
+            height: 100%;  
+                  transition: flex 0.5s ease;
+                    justify-content: center;
+            padding: 20px;
+        }
+       #buttons-container {
+      display: flex;     
+      gap: 10px;
+      align-content:center ;
+      margin-top: 30px;
+       justify-content: center;
+
+    }
+  
+        #map {
+            height: calc(100% - 20px);
+        }
+
+       
+        .list-group-item:hover {
+            background-color: #e0e0e0;
+        }  
+
+     
+        .full-width-map #map-container {
+            flex: 1 1 100%;
+        }
+
+        .full-width-map #assets-container {
+            flex: 0 0 0%; 
+        }
+        .icon-container {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          text-align: center;
+      }
+      
+      .centered-content {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+      }
+      
+        .asset-font {
+    font-family: your-preferred-font;  
+    font-size: 16px;             
+          
+    color: #333;      
+      font-family: Arial, Helvetica, sans-serif;               
+  } 
+  .text-center {
+    text-align: center;
+    margin-bottom: 30px;
+    margin-top: 30px;
+} 
+    .topnav {
+  background-color: #333;
+  overflow: hidden;
+}
+ 
+.topnav a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+ 
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+ 
+.topnav a.active {
+  background-color: #04AA6D;
+  color: white;
+}
+ #status {
+    display: none;
+}
+
+    </style>
+  </head>
+  <body> 
+ 
+
+ 
+<div class="topnav">
+  <a class="active" href="#home">Home</a>
+  <a href="#news">News</a>
+  <a href="#contact">Contact</a>
+  <a href="#about">About</a>
+</div>
+ 
+      
+ 
+   <div id="container">
+    <div id="assets-container">
+        <div class="asset-info card shadow">
+  <h2 class="card-header asset-name">{d.tag}</h2>
+
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="asset-location">
+ 
+          <label for="longitude">Longitude:</label>
+      <span id="longitude">{d.longitude}</span>
+        </div> 
+
+          <div class="asset-location">
+          <label for="longitude">Latitude:</label>
+          <span id="longitude">{d.latitude}</span>
+        </div>
+      </div>
+
+   <div class="col-md-6">
+  <div class="asset-status d-flex align-items-center justify-content-between">
+    <label for="status-toggle">Status:</label>
+    <button id="status-toggle" class="status-toggle btn btn-sm btn-outline-primary" data-toggle="button" aria-pressed="false">{d.status}</button>
+  </div>
+
+  <div class="asset-movement mt-2">  <label for="movementStatus">Movement Status:</label>
+    <span id="movementStatus">{d.movementStatus}</span>
+  </div>
+</div>
+    </div>
+
+    
+    <form class="asset-details mt-4" action="/assets/{d.id}" method="post"> 
+     <input type="hidden" name="{inject:csrf.parameterName}" value="{inject:csrf.token}"/>
+      <div class="form-group row">
+        <label for="tag" class="col-sm-2 col-form-label">{d.tag}</label>
+        <div class="col-sm-10">
+          <input id="tag" type="text" value={d.tag} class="form-control" name="tag">
+        </div>
+      </div> 
+
+
+            <div class="form-group row">
+        <label for="tenantOwner" class="col-sm-2 col-form-label">Managed By</label>
+        <div class="col-sm-10">
+          <input id="tenantOwner" type="text" value={d.tenantOwner} name="tenantOwner" class="form-control">
+        </div>
+      </div> 
+
+        <div class="form-group row">
+        <label for="Type" class="col-sm-2 col-form-label">Type</label>
+        <div class="col-sm-10">
+          <input id="type" type="text" value={d.type} name="type" class="form-control">
+        </div>
+      </div>
+
+
+
+         <textarea id="status" type="hidden" value={d.status}  name="status">{d.status}</textarea>
+      <div class="form-group row">
+
+        <label for="description" class="col-sm-2 col-form-label">Description</label>
+        <div class="col-sm-10">
+          <textarea id="description" class="form-control" name="description">{d.description}</textarea>
+        </div>
+      </div>
+
+      <div class="row">
+    <div class="col-sm-6 d-flex justify-content-end">  <button type="submit" class="btn btn-primary">Save Changes</button>
+    </div>
+    <div class="col-sm-6 d-flex">  <button type="button" id="otherButton" class="btn btn-secondary" onclick="redirectToBackend({d.id})">Delete</button>
+    </div>
+  </div>
+  </div>
+
+   <div class="card-footer">
+      
+      <h5 class="card-title">Rules</h5>
+      <ul class="asset-rules list-group list-group-horizontal">  
+
+                        {#for rule in d.ListOfRules}  
+        <li class="list-group-item"><a href="rule-page-2.html" class="stretched-link">Rule</a></li>
+        {/for}
+      </ul>
+    </div>
+  </div>
+</div>   
+        <div id="map-container">
+            <div id="map"></div>
+ 
+        </div>
+         
+    </div>
+    <script>
+    const mapElement = document.getElementById('map');
+
+    var map = L.map('map').setView([0, 0], 2);
+    var markers = L.markerClusterGroup();
+    L.tileLayer('https://\{s\}.tile.openstreetmap.org/\{z\}/\{x\}/\{y\}.png', {
+      
+    }).addTo(map);
+
+        var assetJSON = {assetJSON.raw}
+    console.log(assetJSON)
+     const transformedArray =  {
+         assetID: assetJSON.assetID,
+        center: [assetJSON.latitude, assetJSON.longitude],
+            status: assetJSON.status,
+            movement:assetJSON.movementStatus
+        } 
+       var fenceJSON =assetJSON.fence
+       console.log(fenceJSON)
+     const transformedArrayFences = fenceJSON.map(obj => ({
+         fencesID: obj.assetID,
+        center: [obj.latitude, obj.longitude],
+            radius: obj.radius
+        })); 
+        
+     function addMarkers(coord,fencesCoor) {
+ 
+         markers.clearLayers();
+       myIcon = L.icon({
+      iconUrl: "static/marker-icon-red.png",
+         
+    iconAnchor: [12, 41],   
+    popupAnchor: [1, -34]
+    });
+  
+          
+          if(coord.movement == "STOPED"){
+            var marker = L.marker(coord.center,{ icon: myIcon });    
+            marker.bindPopup("<b>Asset ID:</b>"+coord.assetID+"<br><b>Status:</b>"+coord.status);
+            }
+            else{
+            var marker = L.marker(coord.center);    
+            marker.bindPopup("<b>Asset ID:</b>"+coord.assetID+"<br><b>Status:</b>"+coord.status);
+            }
+            markers.addLayer(marker);
+
+
+      
+
+
+        fencesCoor.forEach(function (coord) {
+            var circle = L.circle(coord.center, {
+            color: 'blue',         
+            fillColor: 'blue',    
+            fillOpacity: 0.5,     
+            radius: coord.radius          
+            }) ;
+            circle.bindPopup("blablabla");
+            markers.addLayer(circle);
+
+
+        });
+
+        console.log(coord.center)
+      var corner1 = L.latLng(coord.center[0],coord.center[1]);
+  var corner2 = L.latLng(coord.center[0], coord.center[1]);
+  var bounds = L.latLngBounds(corner1, corner2);
+     
+        map.addLayer(markers);        
+        map.fitBounds(bounds);
+    }
+
+
+    addMarkers(transformedArray,transformedArrayFences) 
+
+
+    const statusToggleButton = document.getElementById("status-toggle");
+
+ 
+statusToggleButton.addEventListener("click", () => {
+ 
+  if (statusToggleButton.textContent === "Active") {
+    statusToggleButton.textContent = "Inactive";
+    statusToggleButton.classList.remove("btn-outline-primary");
+    statusToggleButton.classList.add("btn-outline-secondary");  
+    statusToggleButton.value="INACTIVE"
+  } else {
+    statusToggleButton.textContent = "Active";
+    statusToggleButton.classList.remove("btn-outline-secondary");
+    statusToggleButton.classList.add("btn-outline-primary");
+    statusToggleButton.value="ACTIVE"
+  }
+}); 
+ function redirectToBackend(id) {
+ 
+  window.location.href = "/delete/"+id;
+}
+    </script> 
+    <input type="hidden" name="{inject:csrf.parameterName}" value="{inject:csrf.token}"/>
+  </body>
+</html>
