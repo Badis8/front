@@ -11,8 +11,9 @@ import io.quarkus.qute.CheckedTemplate;
 import io.quarkus.qute.TemplateInstance;
 import io.smallrye.common.annotation.Blocking;
 import io.quarkiverse.renarde.Controller;
-
+import org.acme.restclient.DTO.RuleToSend;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.acme.model.AssetPresentationWithinRules;
@@ -64,8 +65,15 @@ public class Application extends Controller {
         public static native TemplateInstance FenceList(List<Fence> Fences);
 
 
-        public static native TemplateInstance addFence();
+        public static native TemplateInstance addFence(); 
 
+        public static native TemplateInstance ruleDetails(Rule r,String rJSON,List<Fence> unIncludedFences,String unIncludedJson);
+
+        public static native TemplateInstance rules(List<Rule> rules,String rulesJson); 
+
+        public static native TemplateInstance addRule(List<Fence> fences,List<AssetDetails> assets);
+
+        public static native TemplateInstance homePage();
         
     }
 
@@ -211,8 +219,80 @@ public class Application extends Controller {
        public void  addFence(@FormParam("longitude") String longitude,@FormParam("radius") String radius,@FormParam("description") String description,@FormParam("tag") String tag,@FormParam("latitude") String latitude) throws Exception          {
            Fence toAdd=new Fence(0,Double.parseDouble(latitude),Double.parseDouble(longitude),Double.parseDouble(radius),tag,description);
            this.FencesService.saveFence(toAdd); 
-           fenceList();
-           
+           fenceList(); 
        }  
-    
+       @Blocking
+       @Path("/rule/{id}")
+       public TemplateInstance  ruleDetail(@PathParam("id") Long id) throws Exception          {
+        Rule r=this.ruleService.findByID(id); 
+        List<Fence> allFences=this.FencesService.findAllFences();
+        Iterator<Fence> iterator = allFences.iterator();
+        while (iterator.hasNext()) {
+            Fence fence = iterator.next();
+            if (Fence.containsFence(r.fences, fence)) {
+                iterator.remove();
+            }
+        }
+        ObjectMapper om = new ObjectMapper();
+        String rJSON = om.writeValueAsString(r);
+        String unIncluded=om.writeValueAsString(allFences);
+        return Templates.ruleDetails(r,rJSON,allFences,unIncluded);              
+       }   
+       @Blocking
+       @Path("/deleteFenceFromRule/{id}/{fenceID}")
+       public void  deleteFence(@PathParam("id") Long id,@PathParam("fenceID") Long fenceID) throws Exception {
+        this.ruleService.removeFenceFromRule(id, fenceID);
+        ruleDetail(id);
+}   
+@Blocking
+@Path("/addFenceToRule/{id}/{fenceID}")
+public void  addFence(@PathParam("id") Long id,@PathParam("fenceID") Long fenceID) throws Exception{    
+    this.ruleService.addFence(id, fenceID);
+    ruleDetail(id);
+}            
+@Blocking
+@Path("/Rules")
+public TemplateInstance  getAllRules() throws Exception{    
+   List<Rule> rules=this.ruleService.findAllRules();
+   ObjectMapper om = new ObjectMapper();
+   String rJSON = om.writeValueAsString(rules);
+   
+   return Templates.rules(rules, rJSON);
+   
+
+
+}    
+
+@Blocking
+@Path("/deleteRule/{id}")
+public void  deleteRule(@PathParam("id") Long id) throws Exception{    
+    this.ruleService.deleteRule(id);
+    getAllRules();
+
+}     
+
+@Blocking
+@Path("/AddRule")
+public TemplateInstance  addRule() throws Exception{    
+    List<Fence> allFences=this.FencesService.findAllFences(); 
+    List<AssetDetails> AssetDetails = assetDetailService.findAllAssets();
+   return  Templates.addRule(allFences, AssetDetails);
+}   
+
+@Blocking
+@POST
+@Path("/AddRule")
+public void addRules(@FormParam("description") String description,@FormParam("tag") String tag,@FormParam("Fences") List<Long> fences,@FormParam("Asset") Long asset) throws Exception{    
+    RuleToSend newRule=new RuleToSend(asset,fences,tag,description);
+    this.ruleService.addRule(newRule);
+    getAllRules();
+} 
+
+
+
+@Blocking
+@Path("/home")
+public TemplateInstance home() throws Exception {
+    return Templates.homePage();
+}
 }

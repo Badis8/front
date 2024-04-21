@@ -31,20 +31,20 @@
     <div class="cards">  
   <div class="card" style="width: 18rem;">
   <div class="card-body">
-    <h5 class="card-title">Add fence</h5>
-    <p class="card-text">Configure your own fence to track and monitor</p>
-    <a href="/AddFence" class="btn btn-primary">add</a>
+    <h5 class="card-title">Add rule</h5>
+    <p class="card-text">Add and configure your own rule to manage fences and assets</p>
+    <a href="/AddRule" class="btn btn-primary">add</a>
   </div>
 </div>   
  
         
-         {#for fence in Fences} 
+         {#for rule in rules} 
  
   <div class="card" style="width: 18rem;">
   <div class="card-body">
-    <h5 class="card-title">{fence.tag}</h5>
-    <p class="card-text">{fence.description}</p>
-    <a href="/fenceDetail/{fence.fenceId}" class="btn btn-primary">Details</a>
+  <h5 class="card-title">{rule.tag} - <span class="badge badge-secondary">{rule.fences.size()} fence asscociated</span></h5>
+    <p class="card-text">{rule.description}</p>
+    <a href="/rule/{rule.ruleID}" class="btn btn-primary">Details</a>
   </div>
 </div>   
  

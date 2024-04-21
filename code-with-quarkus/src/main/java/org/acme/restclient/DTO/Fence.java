@@ -1,4 +1,7 @@
 package org.acme.restclient.DTO;
+
+import java.util.List;
+
 public class Fence {
  
     public long fenceId;
@@ -23,5 +26,15 @@ public class Fence {
         this.description=description;
         this.tag=tag;
     }
+    public static boolean containsFence(List<Fence> fences, Fence fence) {
+        for (Fence f : fences) {
+            if (f.fenceId == fence.fenceId) {
+       
 
+                return true;
+            }
+        }
+        return false;
+    }
 }
+ 

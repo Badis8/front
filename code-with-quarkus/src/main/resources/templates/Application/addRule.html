@@ -3,13 +3,13 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" /> 
-    <link rel="stylesheet" href="static/addAsset.css">
+    <link rel="stylesheet" href="static/addRule.css">
  
  
-    <title>Add asset</title>
+    <title>Add Rule</title>
   </head>
   <body> 
-
+ 
  
  
 <body>  
@@ -22,24 +22,34 @@
 </div>
 <div class="bodyTemplate"> 
     <div class="form-container">
-    <h2>Add Asset</h2>
-    <form action="/AddAsset" method="post">
+    <h2>Add Rule</h2>
+    <form action="/AddRule" method="post">
       <input type="hidden" name="{inject:csrf.parameterName}" value="{inject:csrf.token}"/>
-           <label for="tag">Asset tag</label>
+           <label for="tag">Rule tag</label>
             <input type="text" id="tag" name="tag" required>
 
 
-            <label for="status">Status:</label>
-            <select id="status" name="status" required>
-                <option value="ACTIVE">Active</option>
-                <option value="INACTIVE">Inactive</option>
+            <label for="Asset">Asset:</label>  
+
+
+                  
+            <select id="Asset" name="Asset" required>  
+
+            {#for asset in assets} 
+
+                <option value={asset.assetId}>{asset.tag}</option>
+                 {/for}
             </select>
 
-            <label for="tenantOwner">Tenant manager:</label>
-            <input type="text" id="tenantOwner" name="tenantOwner" required>
+ 
 
-            <label for="type">Type:</label>
-            <input type="text" id="type" name="type" required>
+    <label for="Asset">Fences:</label>
+<select id="Fences" name="Fences" multiple required> 
+       {#for fence in fences} 
+
+                <option value={fence.fenceId}>{fence.tag}</option>
+                 {/for}
+  </select>
 
       <label for=">description">Description</label>
           <textarea id="description" name="description">
@@ -51,5 +61,10 @@
     </div>
 </body>
     
+ <script>
  
+    
+ 
+ 
+ </script>
 </html>

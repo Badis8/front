@@ -127,7 +127,7 @@
 
  
 <div class="topnav">
-  <a class="active" href="/">Home</a>
+  <a class="active" href="/home">Home</a>
   <a href="/Fences">Fences</a>
   <a href="/AssetList">Assets</a>
   <a href="/Rules">Rules</a>
@@ -227,7 +227,7 @@
       <ul class="asset-rules list-group list-group-horizontal">  
 
                         {#for rule in d.ListOfRules}  
-        <li class="list-group-item"><a href="rule-page-2.html" class="stretched-link">Rule</a></li>
+        <li class="list-group-item"><a href="/../rule/{rule.ruleID}" class="stretched-link">{rule.tag}</a></li>
         {/for}
       </ul>
     </div>
@@ -256,6 +256,7 @@
             status: assetJSON.status,
             movement:assetJSON.movementStatus
         } 
+        console.log(transformedArray)
        var fenceJSON =assetJSON.fence
        console.log(fenceJSON)
      const transformedArrayFences = fenceJSON.map(obj => ({

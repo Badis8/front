@@ -23,7 +23,7 @@ public class AssetPresentationWithinRules {
     public String tenantOwner;
     public String tag;
     public String description;
-    public List<Long> ListOfRules; 
+    public List<BriefRule> ListOfRules; 
     public String type;
 
     public AssetPresentationWithinRules(AssetDetails assetWithDetails, List<Rule> rules,Asset asset) {
@@ -42,7 +42,8 @@ public class AssetPresentationWithinRules {
         for (Rule rule : rules) {
             
             uniqueFences.addAll(rule.fences);  
-            this.ListOfRules.add(rule.ruleID);
+            this.ListOfRules.add(new BriefRule(rule.ruleID, rule.tag));
+            
         }
         this.fence = new ArrayList<>(uniqueFences);  
  
